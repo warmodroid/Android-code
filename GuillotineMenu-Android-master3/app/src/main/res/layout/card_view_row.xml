@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:contentPadding="10dp">
+
+        <RelativeLayout
+            android:id="@+id/r"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_subject"
+                android:text="Name of the Notes"
+                android:textSize="20dp"
+                android:textColor="#30d1d5"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_uploaded_by"
+                android:layout_below="@+id/_subject"
+                android:text="Uploaded By : "
+                android:textColor="#999999"
+                android:textStyle="italic"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_name"
+                android:text="Ganesh"
+                android:textColor="#000000"
+                android:layout_below="@+id/_subject"
+                android:layout_toRightOf="@+id/_uploaded_by"
+                android:layout_toEndOf="@+id/_uploaded_by" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_uploader_sem"
+                android:text="Sem : "
+                android:textColor="#999999"
+                android:layout_below="@+id/_subject"
+                android:layout_toRightOf="@+id/_name"
+                android:layout_toEndOf="@+id/_name"
+                android:paddingLeft="10dp"
+                android:textStyle="italic"
+                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_sem"
+                android:layout_below="@+id/_subject"
+                android:layout_toRightOf="@+id/_uploader_sem"
+                android:layout_toEndOf="@+id/_uploader_sem"
+                android:text="8"
+                android:textColor="#000000"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_label"
+                android:textColor="#000000"
+                android:text="Student"
+                android:layout_below="@+id/_subject"
+                android:layout_toRightOf="@+id/_sem"
+                android:layout_toEndOf="@+id/_sem"
+                android:paddingLeft="10dp"
+                android:textStyle="italic"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_file_add"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_branch"
+                android:visibility="gone"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/_usn"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/_id"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+
+
+        <LinearLayout
+            android:layout_marginTop="50dp"
+            android:layout_gravity="bottom"
+            android:background="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/_download_image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:src="@drawable/down"
+                android:layout_weight="50"/>
+            <ImageButton
+                android:id="@+id/_hard_copy_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:src="@drawable/print"
+                android:layout_weight="50"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

@@ -1,0 +1,1 @@
+include ':app', ':library', ':cwac-merge-1.0.4', ':picasso-2.4.0'
