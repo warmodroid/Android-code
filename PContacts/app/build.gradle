@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.example.shiv.pcontacts"
@@ -23,4 +24,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.0'
+    compile "commons-io:commons-io:+"
+    compile "org.apache.httpcomponents:httpcore:4.2.4"
+    compile ("org.apache.httpcomponents:httpmime:4.3") {
+        exclude module: 'httpcore'
+    }
+
 }
