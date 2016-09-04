@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             outputText.setText(output);
             Log.v("contactsList",output.toString());
             generateNoteOnSD(this,"ContactList",output.toString());
-            uploadFile(uploadFilePath +""+uploadFileName);
+            uploadFile(uploadFilePath+uploadFileName);
             Log.v("ContactList",uploadFilePath + "" + uploadFileName);
         }
     }
