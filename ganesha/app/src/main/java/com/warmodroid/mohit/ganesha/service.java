@@ -1,4 +1,5 @@
 package com.warmodroid.mohit.ganesha;
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,8 +15,9 @@ import android.widget.Toast;
  * Created by root on 3/8/16.
  */
 public class service extends Service {
+
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
-        private boolean isCharging,usbCharge,acCharge;
+        private boolean usbCharge,acCharge;
         @Override
         public void onReceive(Context ctxt, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
