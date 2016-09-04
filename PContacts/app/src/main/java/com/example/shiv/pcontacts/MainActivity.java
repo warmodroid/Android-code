@@ -268,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
             }
             //dialog.dismiss();
             return serverResponseCode;
-
         }
     }
 
