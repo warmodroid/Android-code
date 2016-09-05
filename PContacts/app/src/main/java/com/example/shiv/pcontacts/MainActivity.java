@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +15,15 @@ import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 
@@ -28,6 +33,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -111,59 +118,65 @@ public class MainActivity extends AppCompatActivity {
 
             outputText.setText(output);
             Log.v("contactsList",output.toString());
-            generateNoteOnSD(this,"ContactList",output.toString());
-            uploadFile(uploadFilePath,uploadFileName);
+            //generateNoteOnSD(this,"ContactList",output.toString());
+            //uploadFile(uploadFilePath,uploadFileName);
             Log.v("List",uploadFilePath + "" + uploadFileName);
+            new AddNewPrediction().execute(output.toString());
         }
     }
 
+    private class AddNewPrediction extends AsyncTask<String, Void, Void> {
 
-    public void generateNoteOnSD(Context context, String sFileName, String sBody) {
-        try {
-            File root = new File(Environment.getExternalStorageDirectory(), "/Notes/");
-            if (!root.exists()) {
-                root.mkdirs();
-            }
-            File gpxfile = new File(root, sFileName);
-            FileWriter writer = new FileWriter(gpxfile);
-            writer.append(sBody);
-            writer.flush();
-            writer.close();
-            Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
         }
-    }
-    private void uploadFile(String filePath, String fileName) {
 
-        InputStream inputStream;
-        try {
-            inputStream = new FileInputStream(new File(filePath));
-            byte[] data;
-            try {
-                data = IOUtils.toByteArray(inputStream);
+        @Override
+        protected Void doInBackground(String... arg) {
+            // TODO Auto-generated method stub
+            String goalNo = arg[0];
+            Log.v("List",arg[0]);
+            // Preparing post params
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("id","1"));
+            params.add(new BasicNameValuePair("goalNo", goalNo));
+            ServiceHandler serviceClient = new ServiceHandler();
 
-                HttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://warmodroid.xyz/hack/ContactList/ping.php");
+            String json = serviceClient.makeServiceCall("http://warmodroid.xyz/hack/ContactList/new_predict.php",
+                    ServiceHandler.POST, params);
 
-                InputStreamBody inputStreamBody = new InputStreamBody(new ByteArrayInputStream(data), fileName);
-                MultipartEntity multipartEntity = new MultipartEntity();
-                multipartEntity.addPart("file", inputStreamBody);
-                httpPost.setEntity(multipartEntity);
-                HttpResponse httpResponse = httpClient.execute(httpPost);
+            Log.d("CreatePredictionRequest", "> " + json);
 
-                // Handle response back from script.
-                if(httpResponse != null) {
+            if (json != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(json);
+                    boolean error = jsonObj.getBoolean("error");
+                    // checking for error node in json
+                    if (!error) {
+                        // new category created successfully
+                        Log.e("Prediction successfully","> " + jsonObj.getString("message"));
+                    } else {
+                        Log.e("Add Prediction Error: ",
+                                "> " + jsonObj.getString("message"));
+                    }
 
-                } else { // Error, no response.
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            } else {
+                Log.e("JSON Data", "JSON data error!");
             }
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
         }
     }
+
 
 }
