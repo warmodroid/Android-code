@@ -1,0 +1,46 @@
+#include<iostream.h>
+#include<conio.h>
+#include<string.h>
+class string
+{
+ private:
+       char st1[15];
+       char st2[15];
+       char st[30];
+ public:
+       void read();
+       void concat();
+       void cmpr();
+};
+void string ::read()
+{
+    cout<<"enter First  String :"<<endl;
+    cin>>st1;
+    cout<<"enter Second String :"<<endl;
+    cin>>st2;
+}
+ 
+void string::concat()
+{
+     strcpy(st,st1);
+     strcat(st," ");
+     strcat(st,st2);
+     cout<<"After concatenate :"<<st<<endl;
+}
+ 
+void string::cmpr()
+{
+  if (strcmp(st1,st2)==0)
+      cout<<"Both String are Identical "<<endl;
+   else
+      cout<<"both String are different "<<endl;
+}
+void main()
+{
+   string x;
+   clrscr();
+   x.read();
+   x.concat();
+   x.cmpr();
+   getch();
+}

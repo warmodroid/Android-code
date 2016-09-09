@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+// Function to increment the letter count in the counters array
+char add_letter( char letter, int counters[] ) {
+  // Only deal with lower case letters
+  char lower_case_letter = tolower(letter);
+  // Check if character is a letter
+  if ( lower_case_letter >= 'a' && lower_case_letter <= 'z' ) {
+    ++counters[ lower_case_letter - 'a' ];
+  }
+  return letter;
+}
+int main() {
+  // One integer for each  letter
+  int counters[26] = { 0 };
+  // Counting the number of occurences of each letter in this sentence
+  char *sentence = "the quick brown fox jumps over the lazy dog";
+  // Pass each character to the add_letter
+  // function until null-terminator is reached
+  while ( add_letter(*sentence++, counters) );
+  // Display results
+  for (int i = 0; i < 26; ++i) {
+    if ( counters[i] ) {
+      cout << char(i + 'a') << ": " << counters[i] << '\n';
+    }
+  }
+  cin.ignore();
+}

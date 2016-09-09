@@ -1,0 +1,7 @@
+def reverse(s):
+  r = ""
+  for c in s:
+    r = c + r
+  return r
+s = "String to reverse."
+print reverse(s)

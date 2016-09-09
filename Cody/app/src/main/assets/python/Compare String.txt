@@ -1,0 +1,5 @@
+guess = "a"
+correct = "b"
+if guess == correct:
+    print "That's it!\n"
+
