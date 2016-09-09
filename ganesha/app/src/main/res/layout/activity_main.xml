@@ -23,7 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/current"
-        android:text="ac or usb?"
+        android:text="Usually we put mobile on charging and forget it to unplug after 100%. But not to worry because we have something for you.
+This app will make your mobile vibrate for 10 seconds and let you know when charging will be done."
         android:textSize="15dp"
         android:layout_below="@+id/batteryTxt"
         android:layout_centerHorizontal="true"
