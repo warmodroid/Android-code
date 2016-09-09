@@ -14,15 +14,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final TextView textView = (TextView) findViewById(R.id.textView);
+        final TextView textViewOne = (TextView) findViewById(R.id.textView1);
+        final TextView textViewTwo = (TextView) findViewById(R.id.textView2);
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.layout);
-        final Animation a = AnimationUtils.loadAnimation(this,R.anim.anim);
+        final Animation a = AnimationUtils.loadAnimation(this,R.anim.textviewone);
+        final Animation b = AnimationUtils.loadAnimation(this,R.anim.textviewtwo);
         a.reset();
+        b.reset();
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.startAnimation(a);
+                textViewOne.startAnimation(a);
+                textViewTwo.startAnimation(b);
                 a.setDuration(10000);
+                b.setDuration(10000);
             }
         });
     }
