@@ -26,9 +26,29 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"You clicked this circle",Toast.LENGTH_LONG).show();
                 myView.setCircleColor(Color.GREEN);
                 myView.startAnimation(animation);
-                animation.setDuration(10000);
+
             }
         });
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                myView.setCirlceText("Animation started");
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                myView.setCircleColor(Color.BLACK);
+                myView.setCirlceText("Click on me to see magic");
+                //myView.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
     }
 
 }

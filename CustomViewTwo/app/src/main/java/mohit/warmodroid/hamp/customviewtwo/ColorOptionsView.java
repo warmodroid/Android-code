@@ -16,7 +16,7 @@ import android.widget.TextView;
 /**
  * Created by shiv on 9/10/16.
  */
-public class ColorOptionsView extends View {
+public class ColorOptionsView extends View{
     private View mValue;
     private ImageView mImage;
     private Paint paint;
