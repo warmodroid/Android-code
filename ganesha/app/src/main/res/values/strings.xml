@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Full Charge Alarm</string>
+    <string name="terms">By Clicking Next Button You are agree with <u>Terms and User Data Policy</u></string>
 </resources>
