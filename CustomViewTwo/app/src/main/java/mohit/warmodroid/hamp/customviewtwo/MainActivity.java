@@ -11,8 +11,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ColorOptionsView myView = (ColorOptionsView) findViewById(R.id.circle);
-        //myView
+        ColorOptionsView myView = (ColorOptionsView) findViewById(R.id.circle);
+        myView.setCirlceText("Hey its working now...!!!");
+        myView.setCircleTextSize(20);
+        myView.setCircleRaduis(150);
     }
 
 }
