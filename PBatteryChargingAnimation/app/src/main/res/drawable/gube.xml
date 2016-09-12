@@ -13,5 +13,5 @@
     <item
         android:drawable="@drawable/csevenfive"
         android:duration="900"/>
-    
+
 </animation-list>

@@ -12,5 +12,11 @@
     tools:context="mohit.warmodroid.hamp.pbatterycharginganimation.MainActivity"
     tools:showIn="@layout/activity_main">
 
-
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="180dp"
+        android:id="@+id/imagee"
+        android:layout_marginTop="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
