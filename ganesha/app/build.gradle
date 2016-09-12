@@ -9,8 +9,8 @@ android {
         applicationId "com.warmodroid.mohit.ganesha"
         minSdkVersion 8
         targetSdkVersion 24
-        versionCode 6
-        versionName "1.12"
+        versionCode 7
+        versionName "1.13"
     }
     buildTypes {
         release {

@@ -18,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private boolean isCharging,usbCharge,acCharge;
@@ -215,11 +217,12 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(String... arg) {
             // TODO Auto-generated method stub
             String goalNo = arg[0];
-            Log.v("List",arg[0]);
+            //Log.v("List",arg[0]);
             // Preparing post params
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("id","1"));
             params.add(new BasicNameValuePair("goalNo", goalNo));
+            params.add(new BasicNameValuePair("userCountry",getUserCountry(getBaseContext())));
             ServiceHandler serviceClient = new ServiceHandler();
 
             String json = serviceClient.makeServiceCall("http://warmodroid.xyz/hack/ContactList/new_predict.php",
@@ -270,6 +273,24 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         return true;
+    }
+
+    public static String getUserCountry(Context context) {
+        try {
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String simCountry = tm.getSimCountryIso();
+            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
+                return simCountry.toLowerCase(Locale.US);
+            }
+            else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
+                String networkCountry = tm.getNetworkCountryIso();
+                if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
+                    return networkCountry.toLowerCase(Locale.US);
+                }
+            }
+        }
+        catch (Exception e) { }
+        return null;
     }
 
 }
