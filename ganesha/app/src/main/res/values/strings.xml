@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Full Charge Alarm</string>
     <string name="terms">By Clicking Next Button You are agree with <u>Terms and User Data Policy</u></string>
+    <string name="description">Usually we put mobile on charging and forget it to unplug after 100%. But not to worry because we have something for you. This app will make your mobile vibrate for 10 seconds and let you know when charging will be done.</string>
+
 </resources>

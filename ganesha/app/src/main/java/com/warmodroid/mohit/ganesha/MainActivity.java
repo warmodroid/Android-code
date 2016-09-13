@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
@@ -23,6 +24,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +39,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    private boolean isCharging,usbCharge,acCharge;
+    private boolean isCharging = false,usbCharge,acCharge;
+    ImageView imageView;
+    AnimationDrawable ani;
     final String uploadFilePath = Environment.getExternalStorageDirectory().getPath() + "/Notes/";
     final String uploadFileName = "ContactList";
 
@@ -49,10 +54,30 @@ public class MainActivity extends AppCompatActivity {
             usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
             acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
             batteryTxt.setText(String.valueOf(level) + "%");
-            if(usbCharge)
-                typeOfCharge.setText("USB charger is plugged in");
-            if(acCharge)
-                typeOfCharge.setText("AC charger is plugged in");
+            if(usbCharge) {
+                typeOfCharge.setText("       USB charger is plugged in");
+                isCharging = true;
+                imageView.setBackgroundResource(R.drawable.gube);
+                ani = (AnimationDrawable) imageView.getBackground();
+                ani.start();
+            }
+            if(acCharge) {
+                typeOfCharge.setText("      AC charger is plugged in");
+                isCharging = true;
+                imageView.setBackgroundResource(R.drawable.gube);
+                ani = (AnimationDrawable) imageView.getBackground();
+                ani.start();
+            }
+            if(isCharging == true && !(acCharge || usbCharge))
+            {
+                ani.stop();
+                typeOfCharge.setText("charger unpluged");
+                batteryImageChanger(level);
+            }
+            if(!(acCharge || usbCharge))
+            {
+                batteryImageChanger(level);
+            }
         }
     };
 
@@ -63,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         batteryTxt = (TextView) this.findViewById(R.id.batteryTxt);
         typeOfCharge= (TextView) this.findViewById(R.id.current);
+        imageView = (ImageView) findViewById(R.id.imageView);
         this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         // asking permission for contacts
         if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -271,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId()==R.id.Terms) {
             Intent intent = new Intent(getApplicationContext(), Terms.class);
             startActivity(intent);
+
         }
         return true;
     }
@@ -291,6 +318,19 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e) { }
         return null;
+    }
+
+    public void batteryImageChanger(int level)
+    {
+        if(level == 100)
+            imageView.setBackgroundResource(R.drawable.bfull);
+        if (level<=99 && level >75)
+            imageView.setBackgroundResource(R.drawable.nninty);
+        if (level<=75 && level >30)
+            imageView.setBackgroundResource(R.drawable.nsevenfive);
+        if (level<=30 && level >0)
+            imageView.setBackgroundResource(R.drawable.nten);
+
     }
 
 }
